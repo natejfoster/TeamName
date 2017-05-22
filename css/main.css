@@ -3,8 +3,12 @@ p {
   opacity:.7
 }
 
-#sandbox, #vis {
-  margin-top:20px;
+#sandbox {
+  margin-top:100px;
+}
+
+#vis {
+  margin-top: 100px;
 }
 
 

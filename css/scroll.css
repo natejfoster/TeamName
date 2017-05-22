@@ -7,13 +7,13 @@
 }
 
 .step {
-  margin-bottom: 200px;
+  margin-bottom: 500px;
 }
 
 #vis {
   display: inline-block;
   position: fixed;
-  top: 60px;
+  top: 300px;
   z-index: 1;
   margin-left: 0;
   height: 600px;

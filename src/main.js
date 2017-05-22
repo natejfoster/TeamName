@@ -7,6 +7,27 @@ var data = [{
     value: 34
 }];
 
+$.fn.lockLocation = function(start, stop) {
+  $(window).scroll(function(location) {
+    if ($(window).scrollTop() < start) {
+      $('#vis').css({
+        position: 'absolute',
+        top: start
+      });
+    } else if ($(window).scrollTop() > stop) {
+      $('#vis').css({
+        position: 'absolute',
+        top: stop
+      });
+    } else {
+      $('#vis').css({
+        position: 'fixed',
+        top: '0px'
+      })
+    }
+  })
+}
+
 $(function() {
     // Instantiate your chart with given settings
     var myChart = BarChart().xVar('name')
@@ -20,6 +41,8 @@ $(function() {
     var chart = d3.select('#vis')
         .datum(data)
         .call(myChart);
+
+    $('#vis').lockLocation(300, 2500);
 
     var update = function(index) {
         switch (index) {
@@ -51,7 +74,6 @@ $(function() {
 
     // Specify the function you wish to activate when a section becomes active
     scroll.on('active', function(index) {
-        console.log(index)
         update(index);
     })
 });
