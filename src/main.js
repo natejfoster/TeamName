@@ -7,6 +7,8 @@ var data = [{
     value: 34
 }];
 
+// Function to lock and unlock the position of the vis based on the passed in
+// start and stop values.
 $.fn.lockLocation = function(start, stop) {
   $(window).scroll(function(location) {
     if ($(window).scrollTop() < start) {
@@ -29,7 +31,7 @@ $.fn.lockLocation = function(start, stop) {
 }
 
 $(function() {
-    // Instantiate your chart with given settings
+    // Initialize charting tool
     var myChart = BarChart().xVar('name')
         .yVar('value')
         .xAxisLabel('Bar')
@@ -42,7 +44,7 @@ $(function() {
         .datum(data)
         .call(myChart);
 
-    $('#vis').lockLocation(300, 2500);
+    $('#vis').lockLocation(300, 2400);
 
     var update = function(index) {
         switch (index) {
@@ -65,7 +67,7 @@ $(function() {
         myChart.fillColor(fillColor);
         chart.datum(data).call(myChart);
     };
-    // Define a new scroller, and use the `.container` method to specify the desired container
+    // Create scroller
     var scroll = scroller()
         .container(d3.select('#graphic'));
 
