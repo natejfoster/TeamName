@@ -1,0 +1,26 @@
+
+p {
+  opacity:.7
+}
+
+#sandbox, #vis {
+  margin-top:20px;
+}
+
+
+.axis line, .axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.title {
+	text-anchor:middle;
+}
+
+.axis text {
+  font-size:10px;
+}
+
+.bar {
+  opacity:.4;
+}
