@@ -6,8 +6,8 @@ $(function() {
         console.log(data);
         var myChart = LineChart()
             .xValue(function(d) {
-              console.log(d.date);
-              return formatDate(d.date);})
+              console.log(formatDate(d.date));
+              return d.date;})
             .yValue(function(d) { return +d["Wall"]; }) // Currently takes in only final one
             .width(1000)
             .height(500)
