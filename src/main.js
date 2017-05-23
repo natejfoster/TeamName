@@ -44,7 +44,7 @@ $(function() {
         .datum(data)
         .call(myChart);
 
-    $('#vis').lockLocation(300, 2400);
+    $('#vis').lockLocation(720, 2400);
 
     var update = function(index) {
         switch (index) {

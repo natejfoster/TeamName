@@ -28,3 +28,11 @@ p {
 .bar {
   opacity:.4;
 }
+
+#intro h1 {
+	margin: 0;
+}
+
+#intro h4, #intro h1 {
+	line-height: 1.20em;
+}
