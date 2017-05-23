@@ -44,7 +44,7 @@ $(function() {
         .datum(data)
         .call(myChart);
 
-    $('#vis').lockLocation(720, 2950);
+    $('#vis').lockLocation(720, 3400);
 
     var update = function(index) {
         switch (index) {
@@ -60,6 +60,12 @@ $(function() {
             case 3:
                 var fillColor = 'black';
                 break;
+            case 4:
+                var fillColor = 'green';
+                break;
+            case 5:
+                var fillColor = 'purple';
+                break;
             default:
                 var fillColor = 'black';
                 break;
@@ -71,10 +77,10 @@ $(function() {
     var scroll = scroller()
         .container(d3.select('#graphic'));
 
-    // Pass in a selection of all elements that you wish to fire a step event:
+    // Select all steps
     scroll(d3.selectAll('.step')); // each section with class `step` is a new step
 
-    // Specify the function you wish to activate when a section becomes active
+    // Add the update function to all steps
     scroll.on('active', function(index) {
         update(index);
     })
