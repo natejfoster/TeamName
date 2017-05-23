@@ -78,7 +78,7 @@ $(function() {
         .container(d3.select('#graphic'));
 
     // Select all steps
-    scroll(d3.selectAll('.step')); // each section with class `step` is a new step
+    scroll(d3.selectAll('.step')); 
 
     // Add the update function to all steps
     scroll.on('active', function(index) {
