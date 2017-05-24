@@ -120,11 +120,6 @@ var LineChart = function () {
                 text.exit().remove()
             }
 
-            var overlay = gEnter.append('rect') // UNFINISHED, WILL THROW ERRORS WHENEVER YOU MOUSE OVER CHART
-                .attr("class", "overlay")
-                .attr('width', drawWidth)
-                .attr('height', drawHeight);
-
             overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774 STILL UNFINISHED
                 var date = xScale.invert(d3.mouse(this)[0])
                 drawHovers(date)
