@@ -2,7 +2,7 @@
 $(function() {
 
     d3.tsv("data/data.tsv", function(error, data) {
-        var formatDate = d3.timeParse("%Y");
+        var formatDate = d3.timeParse("%Y%m%d");
         console.log(data);
         var myChart = LineChart()
             .xValue(function(d) {
