@@ -3,11 +3,9 @@ $(function() {
 
     d3.tsv("data/data.tsv", function(error, data) {
         var formatDate = d3.timeParse("%Y%m%d");
-        console.log(data);
         var myChart = LineChart()
             .xValue(function(d) {
-              console.log(formatDate(d.date));
-              return d.date;})
+              return formatDate(d.date)})
             .yValue(function(d) { return +d["Wall"]; }) // Currently takes in only final one
             .width(1000)
             .height(500)
