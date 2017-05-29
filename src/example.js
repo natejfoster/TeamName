@@ -7,7 +7,7 @@ $(function() {
             .xValue(function(d) {
               return formatDate(d.date)})
             .yValue(function(d) { return +d["Wall"]; }) // Currently takes in only final one
-            .width(1000)
+            .focusColor("steelblue")
             .height(500)
             .color("#AAA")
             .lineWidth(4)

@@ -16,7 +16,7 @@ var LineChart = function () {
         left: 80
     };
 
-    var width = 900;
+    var width = 1200; // 900 + 300
     var height = 560;
     var xScale = d3.scaleTime().rangeRound([0, width]);
     var yScale = d3.scaleLinear().range([height, 0]);
@@ -26,11 +26,12 @@ var LineChart = function () {
     var yValue = function (d) { return d[1] }
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
     var line = d3.line().x(X).y(Y)  // Alternatively you can think of it as being dark green to represent money since many line charts plot time vs money
+    var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
     var xAxisTitle = "X Axis"
     var yAxisTitle = "Y Axis"
-    var drawWidth = width - margin.left - margin.right;
+    var drawWidth = width - margin.left - margin.right - 300; // Ensures enough space for the text to appear
     var drawHeight = height - margin.top - margin.bottom;
 
     function myChart(selection) {
@@ -78,19 +79,18 @@ var LineChart = function () {
                 .attr('width', drawWidth)
                 .attr('height', drawHeight);
 
-            function drawHovers(date) {
+            function draw(date) {
                 var bisector = d3.bisector(function(d, x) {
                     return d[0] - x
                 }).left
 
-           //     var dat = new Array; // New array because previously I realized if I reused selectedData everything would be messed up
                 data.sort(function (a, b) { // Sort by date
                     return a[0] - b[0]
                 })
                 var dat = [data[bisector(data, date)]]
-
                 // Do a data-join (enter, update, exit) to draw circles
                 var circles = g.selectAll(".hoverCircle").data(dat)
+
                 circles.enter()
                         .append("circle")
                         .attr("class", "hoverCircle")
@@ -118,16 +118,41 @@ var LineChart = function () {
                         .text(function(d){return "Word Usage: " + d[1] + " Per Million in " + d[0].getFullYear()})
 
                 text.exit().remove()
+                
+                // http://bl.ocks.org/mikehadlow/93b471e569e31af07cd3 inspiration for focus lines
+                var focusLine = g.selectAll(".focusLine").data(dat)
+
+                focusLine.enter()
+                    .append("line")
+                    .attr("class", "focusLine")
+                    .attr("fill", "none")
+                    .attr("stroke", focusColor)
+                    .attr("stroke-linejoin", "round")
+                    .attr("stroke-linecap", "round")
+                    .attr("stroke-width", lineWidth)
+                    .attr("x1", function(d) {return xScale(d[0])})
+                    .attr("y1", 0)
+                    .attr("x2", function(d) {return xScale(d[0])})
+                    .attr("y2", drawHeight)
+                
+                focusLine.attr("x1", function(d) {return xScale(d[0])})
+                    .attr("y1", 0)
+                    .attr("x2", function(d) {return xScale(d[0])})
+                    .attr("y2", drawHeight)
+
+                focusLine.exit().remove()
+
             }
 
             overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774 STILL UNFINISHED
                 var date = xScale.invert(d3.mouse(this)[0])
-                drawHovers(date)
+                draw(date)
             })
 
             overlay.on("mouseout", function () { //http://stackoverflow.com/questions/16260285/d3-removing-elements
                 d3.selectAll(".hoverCircle").remove()
                 d3.selectAll(".hoverText").remove()
+                d3.selectAll(".focusLine").remove()
             })
 
             // Update the outer dimensions.
@@ -164,7 +189,7 @@ var LineChart = function () {
             return margin;
         }
         margin = value; // Whenever margins, width, or height are updated, drawWidth and drawHeight must also be updated
-        drawWidth = width - margin.left - margin.right;
+        drawWidth = width - margin.left - margin.right - 300;
         drawHeight = height - margin.top - margin.bottom;
         return myChart;
     }
@@ -173,8 +198,8 @@ var LineChart = function () {
         if (!arguments.length) {
             return width;
         }
-        width = value;
-        drawWidth = width - margin.left - margin.right;
+        width = value + 300;
+        drawWidth = width - margin.left - margin.right - 300;
         return myChart;
     };
 
@@ -193,6 +218,14 @@ var LineChart = function () {
             return color;
         }
         color = value;
+        return myChart;
+    }
+
+    myChart.focusColor = function (value) {
+        if (!arguments.length) {
+            return focusColor;
+        }
+        focusColor = value;
         return myChart;
     }
 
