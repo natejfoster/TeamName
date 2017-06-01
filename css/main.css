@@ -21,6 +21,11 @@ p {
   margin-bottom: 30px;
 }
 
+#title {
+  float: left;
+  width: 200px;
+}
+
 #menu {
   float: right;
   margin-top: 20px;
@@ -34,7 +39,11 @@ p {
 }
 
 #intro {
-  margin-top: 60px;
+  padding-top: 60px;
+}
+
+#content {
+  padding-top: 60px;
 }
 
 

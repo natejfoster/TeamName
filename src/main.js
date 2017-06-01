@@ -31,26 +31,37 @@ $.fn.lockLocation = function(start, stop) {
   })
 }
 
+$.fn.showTitle = function() {
+  $(window).scroll(function(location) {
+    if ($(window).scrollTop() > 250) {
+      $('#title').animate({
+        opacity: 1
+      });
+    } else if ($(window).scrollTop() <= 250) {
+      $('#title').animate({
+        opacity: 0
+      });
+    };
+  });
+}
+
 $(function() {
-     /* ********************************** Data prep  ********************************** */
     $('#TechnologyButton').click(changeChartFilter);
 
     function changeChartFilter(event, element){
             console.log(event);
             console.log("HI");
             d3.csv('data/ngramClassification.csv', function(error, data2) {
-            console.log(data);
-            data = data2
-            console.log(data);
-            console.log(data[0]['Type']);
+            console.log(data2);
+            console.log(data2);
+            console.log(data2[0]['Type']);
             var nested_data = d3.nest().key(function(d) { return d.Type; })
-            .entries(data);
+            .entries(data2);
             console.log(nested_data);
             return nested_data;
         });
     };
-       
-    
+
         // Initialize charting tool
         var myChart = BarChart().xVar('name')
             .yVar('value')
@@ -59,12 +70,39 @@ $(function() {
             .width(500)
             .height(250);
 
+    $("a").on('click', function(event) {
+      if (this.hash !== "") {
+        event.preventDefault();
+        var hash = this.hash;
+        $('html, body').animate({
+          scrollTop: $(hash).offset().top
+        }, 800, function(){
+          window.location.hash = hash;
+        });
+      }
+    });
+
+    // Initialize charting tool
+    var myChart = BarChart().xVar('name')
+        .yVar('value')
+        .xAxisLabel('Bar')
+        .yAxisLabel('Arbitrary Value')
+        .width(500)
+        .height(250);
+
+
         // Build chart
         var chart = d3.select('#vis')
             .datum(data)
             .call(myChart);
 
-        $('#vis').lockLocation(720, 3400);
+    $('#title').css({
+      opacity: 0
+    });
+
+    $('#vis').lockLocation(720, 3400);
+    $('#title').showTitle();
+
 
         var update = function(index) {
             switch (index) {
