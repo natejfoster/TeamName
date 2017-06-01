@@ -19,7 +19,7 @@ var LineChart = function () {
     var yValue = function(d) {return d[1]}
     var yValue2 = function(d) {return d[2]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
-    var line = d3.line().x(X).y(Y)  // Alternatively you can think of it as being dark green to represent money since many line charts plot time vs money
+    var line = d3.line().x(function(d) {return xScale(+d.date)}).y(function(d) {return yScale(+d.value)})  // Alternatively you can think of it as being dark green to represent money since many line charts plot time vs money
     var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
@@ -34,7 +34,7 @@ var LineChart = function () {
             data = data.map(function (d, i) { // Maps every x,y pair into an array
                 return [xValue.call(data, d, i), yValue.call(data, d, i), yValue2.call(data, d, i)]; // THIS WILL HAVE TO CHANGE IN ORDER TO GET MORE LINES: currently only gets one value: Make it a bigger array?
             });
-
+            
             // Update the x-scale.
             xScale.domain(d3.extent(data, function (d) { return d[0]; }))
                 .rangeRound([0, drawWidth]);
@@ -47,7 +47,6 @@ var LineChart = function () {
             var svg = d3.select(this).selectAll("svg").data([data]).enter().append("svg")
             // Create chart elements
             var gEnter = svg.append("g");
-            gEnter.append("path").attr("class", "line");
             gEnter.append("g").attr("class", "x axis");
             gEnter.append("g").attr("class", "y axis");
 
@@ -73,7 +72,24 @@ var LineChart = function () {
                 .attr('width', drawWidth)
                 .attr('height', drawHeight);
 
-            function draw(date) {
+            // Update the outer dimensions.
+            svg.attr("width", width)
+                .attr("height", height)
+
+            // Update the inner dimensions.
+            var g = svg.select("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+            // Update the x-axis.
+            g.select(".x.axis")
+                .attr("transform", "translate(0," + yScale.range()[0] + ")")
+                .call(xAxis)
+
+            // Update the y-axis.
+            g.select(".y.axis")
+                .call(yAxis)
+
+            function drawHovers(date) {
                 var bisector = d3.bisector(function(d, x) {
                     return d[0] - x
                 }).left
@@ -82,38 +98,67 @@ var LineChart = function () {
                     return a[0] - b[0]
                 })
                 var dat = [data[bisector(data, date)]]
-                // Do a data-join (enter, update, exit) to draw circles
+                var datas = []
                 for(var i = 1; i < dat[0].length; i++) {
-                    console.log(dat[0][i])
-                    var circles = g.selectAll(".hoverCircle").data(dat)
-                    circles.enter()
-                            .append("circle")
-                            .attr("class", "hoverCircle")
-                            .attr("r", 10)
-                            .attr("cx", function(d){return xScale(d[0])})
-                            .attr("cy", function(d){return yScale(d[i])})
-                
-                    circles.attr("cx", function(d){return xScale(d[0])}) // Necessary for updates, same with text below
-                            .attr("cy", function(d){return yScale(d[i])})
-
-                 //   circles.exit().remove()
-
-                    // Do a data-join (enter, update, exit) draw text
-                    var text = g.selectAll(".hoverText").data(dat)
-
-                    text.enter() 
-                            .append("text")
-                            .attr("class", "hoverText")
-                            .attr("x", function(d){return xScale(d[0]) + 10})
-                            .attr("y", function(d){return yScale(d[i]) -5})
-                            .text(function(d){return "Word Usage: " + d[1] + " Per Million in " + d[0].getFullYear()})
-                
-                    text.attr("x", function(d){return xScale(d[0]) + 10})
-                            .attr("y", function(d){return yScale(d[i]) -5})
-                            .text(function(d){return "Word Usage: " + d[i] + " Per Million in " + d[0].getFullYear()})
-
-                //    text.exit().remove()
+                    datas[i-1] = {
+                        date: dat[0][0],
+                        value: dat[0][i]
+                    }
                 }
+                
+                // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
+                var lineData = []
+                for(var i = 0; i < data.length; i++) {
+                    lineData[i] = [{
+                        date:data[i][0],
+                        value: data[i][1]
+                    }, 
+                    {
+                        date:data[i][0],
+                        value: data[i][2]
+                    }]
+                }
+                console.log(data)
+                var paths = g.selectAll(".path")
+                    .data(lineData) // CURRENTLY NANING, FIX LATER: 
+                    .enter()
+                    .append("path")
+                    .attr("class", "path")
+                    .attr("d", line)
+                    .attr("fill", "none")
+                    .attr("stroke", color)
+                    .attr("stroke-linejoin", "round")
+                    .attr("stroke-linecap", "round")
+                    .attr("stroke-width", lineWidth)
+
+                // Do a data-join (enter, update, exit) to draw circles
+                var circles = g.selectAll(".hoverCircle").data(datas)
+                circles.enter()
+                        .append("circle")
+                        .attr("class", "hoverCircle")
+                        .attr("r", 10)
+                        .attr("cx", function(d){return xScale(d.date)})
+                        .attr("cy", function(d){return yScale(d.value)})
+            
+                circles.attr("cx", function(d){return xScale(d.date)}) // Necessary for updates, same with text below
+                        .attr("cy", function(d){return yScale(d.value)})
+
+                circles.exit().remove()
+
+                // Do a data-join (enter, update, exit) draw text
+                var text = g.selectAll(".hoverText").data(datas)
+
+                text.enter() 
+                        .append("text")
+                        .attr("class", "hoverText")
+                        .attr("x", function(d){return xScale(d.date) + 10})
+                        .attr("y", function(d){return yScale(d.value) -5})
+                        .text(function(d){return "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()})
+            
+                text.attr("x", function(d){return xScale(d.date) + 10})
+                        .attr("y", function(d){return yScale(d.value) -5})
+                        .text(function(d){return "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()})
+                text.exit().remove()
                 
                 // http://bl.ocks.org/mikehadlow/93b471e569e31af07cd3 inspiration for focus lines
                 var focusLine = g.selectAll(".focusLine").data(dat)
@@ -137,12 +182,11 @@ var LineChart = function () {
                     .attr("y2", drawHeight)
 
                 focusLine.exit().remove()
-
             }
 
             overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774
                 var date = xScale.invert(d3.mouse(this)[0])
-                draw(date)
+                drawHovers(date)
             })
 
             overlay.on("mouseout", function () { //http://stackoverflow.com/questions/16260285/d3-removing-elements
@@ -150,32 +194,6 @@ var LineChart = function () {
                 d3.selectAll(".hoverText").remove()
                 d3.selectAll(".focusLine").remove()
             })
-
-            // Update the outer dimensions.
-            svg.attr("width", width)
-                .attr("height", height)
-
-            // Update the inner dimensions.
-            var g = svg.select("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-
-            // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
-            g.select(".line")
-                .attr("fill", "none")
-                .attr("stroke", color)
-                .attr("stroke-linejoin", "round")
-                .attr("stroke-linecap", "round")
-                .attr("stroke-width", lineWidth)
-                .attr("d", line)
-
-            // Update the x-axis.
-            g.select(".x.axis")
-                .attr("transform", "translate(0," + yScale.range()[0] + ")")
-                .call(xAxis)
-
-            // Update the y-axis.
-            g.select(".y.axis")
-                .call(yAxis)
         })
     }
 
