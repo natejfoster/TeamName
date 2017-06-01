@@ -14,9 +14,10 @@ var LineChart = function () {
     var xScale = d3.scaleTime().rangeRound([0, width]);
     var yScale = d3.scaleLinear().range([height, 0]);
     var xAxis = d3.axisBottom(xScale);
-    var yAxis = d3.axisLeft(yScale)
-    var xValue = function (d) { return d[0] } // Values by default are set to first two values in array
-    var yValue = function (d) { return d[1] }
+    var yAxis = d3.axisLeft(yScale);
+    var xValue = function(d) {return d[0]} // Values by default are set to first values in array
+    var yValue = function(d) {return d[1]}
+    var yValue2 = function(d) {return d[2]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
     var line = d3.line().x(X).y(Y)  // Alternatively you can think of it as being dark green to represent money since many line charts plot time vs money
     var focusColor = "black" // Colors the vertical "focus line"
@@ -31,15 +32,15 @@ var LineChart = function () {
         selection.each(function (data) {
             // Convert data
             data = data.map(function (d, i) { // Maps every x,y pair into an array
-                return [xValue.call(data, d, i), yValue.call(data, d, i)]; // THIS WILL HAVE TO CHANGE IN ORDER TO GET MORE LINES: currently only gets one value: Make it a bigger array?
+                return [xValue.call(data, d, i), yValue.call(data, d, i), yValue2.call(data, d, i)]; // THIS WILL HAVE TO CHANGE IN ORDER TO GET MORE LINES: currently only gets one value: Make it a bigger array?
             });
 
             // Update the x-scale.
-            xScale.domain(d3.extent(data, function (d) { return d[0]; })) 
+            xScale.domain(d3.extent(data, function (d) { return d[0]; }))
                 .rangeRound([0, drawWidth]);
 
             // Update the y-scale.
-            yScale.domain([d3.min(data, function (d) { return d[1] * 0.9 }), d3.max(data, function (d) { return d[1] * 1.1; })]) // Makes sure graph is always scaled to minimum and maximums of the graph
+            yScale.domain([d3.min(data, function (d) { return Math.min(d[1], d[2]) * 0.9 }), d3.max(data, function (d) { return Math.max(d[1], d[2]) * 1.1; })]) // Makes sure graph is always scaled to minimum and maximums of the graph
                 .range([drawHeight, 0]) // THIS MUST CHANGE: if statement/loop which checks min/max for all lines
 
             // Creating SVG and G elements, renders in whatever element the chart is called in
@@ -82,35 +83,37 @@ var LineChart = function () {
                 })
                 var dat = [data[bisector(data, date)]]
                 // Do a data-join (enter, update, exit) to draw circles
-                var circles = g.selectAll(".hoverCircle").data(dat)
-
-                circles.enter()
-                        .append("circle")
-                        .attr("class", "hoverCircle")
-                        .attr("r", 10)
-                        .attr("cx", function(d){return xScale(d[0])})
-                        .attr("cy", function(d){return yScale(d[1])})
+                for(var i = 1; i < dat[0].length; i++) {
+                    console.log(dat[0][i])
+                    var circles = g.selectAll(".hoverCircle").data(dat)
+                    circles.enter()
+                            .append("circle")
+                            .attr("class", "hoverCircle")
+                            .attr("r", 10)
+                            .attr("cx", function(d){return xScale(d[0])})
+                            .attr("cy", function(d){return yScale(d[i])})
                 
-                circles.attr("cx", function(d){return xScale(d[0])}) // Necessary for updates, same with text below
-                        .attr("cy", function(d){return yScale(d[1])})
+                    circles.attr("cx", function(d){return xScale(d[0])}) // Necessary for updates, same with text below
+                            .attr("cy", function(d){return yScale(d[i])})
 
-                circles.exit().remove()
+                 //   circles.exit().remove()
 
-                // Do a data-join (enter, update, exit) draw text
-                var text = g.selectAll(".hoverText").data(dat)
+                    // Do a data-join (enter, update, exit) draw text
+                    var text = g.selectAll(".hoverText").data(dat)
 
-                text.enter() 
-                        .append("text")
-                        .attr("class", "hoverText")
-                        .attr("x", function(d){return xScale(d[0]) + 10})
-                        .attr("y", function(d){return yScale(d[1]) -5})
-                        .text(function(d){return "Word Usage: " + d[1] + " Per Million in " + d[0].getFullYear()})
-            
-                text.attr("x", function(d){return xScale(d[0]) + 10})
-                        .attr("y", function(d){return yScale(d[1]) -5})
-                        .text(function(d){return "Word Usage: " + d[1] + " Per Million in " + d[0].getFullYear()})
+                    text.enter() 
+                            .append("text")
+                            .attr("class", "hoverText")
+                            .attr("x", function(d){return xScale(d[0]) + 10})
+                            .attr("y", function(d){return yScale(d[i]) -5})
+                            .text(function(d){return "Word Usage: " + d[1] + " Per Million in " + d[0].getFullYear()})
+                
+                    text.attr("x", function(d){return xScale(d[0]) + 10})
+                            .attr("y", function(d){return yScale(d[i]) -5})
+                            .text(function(d){return "Word Usage: " + d[i] + " Per Million in " + d[0].getFullYear()})
 
-                text.exit().remove()
+                //    text.exit().remove()
+                }
                 
                 // http://bl.ocks.org/mikehadlow/93b471e569e31af07cd3 inspiration for focus lines
                 var focusLine = g.selectAll(".focusLine").data(dat)
@@ -267,6 +270,12 @@ var LineChart = function () {
         return myChart;
     };
 
+    myChart.yValue2 = function (value) {
+        if (!arguments.length) return yValue2;
+        yValue2 = value;
+        return myChart;
+    };
+
     // The x-accessor for the path generator; xScale * xValue.
     function X(d) {
         return xScale(d[0]);
@@ -277,5 +286,8 @@ var LineChart = function () {
         return yScale(d[1]);
     }
 
+    function Y2(d) {
+        return yScale(d[2])
+    }
     return myChart;
 };

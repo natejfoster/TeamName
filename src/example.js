@@ -6,7 +6,8 @@ $(function() {
         var myChart = LineChart()
             .xValue(function(d) {
               return formatDate(d.date)})
-            .yValue(function(d) { return +d["Wall"]; }) // Currently takes in only final one
+            .yValue(function(d) { return +d["Wall"]})
+            .yValue2(function(d) {return +d["Taxes"]}) // Currently takes in only final one
             .focusColor("steelblue")
             .height(500)
             .color("#AAA")
