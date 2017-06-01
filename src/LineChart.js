@@ -1,12 +1,5 @@
 "use strict"
-/* When data is input, the data must be formatted using d3.timeParse
-ex: 
-        var formatDate = d3.timeParse("%Y$m$d");
-        var myChart = LineChart()
-            .xValue(function(d) { return formatDate(d.date); })
-            .yValue(function(d) { return [+d["New York"], +d["San Francisco"]]; })
-            At current time only one yValue can be accepted, multiple will not work
-*/
+// TODO: Get multiple lines working (mark code that will 100% have to change to make it work), write out which word is which line, multiple colors for different lines, transitions
 var LineChart = function () {
     // Set default values
     var margin = {
@@ -38,16 +31,16 @@ var LineChart = function () {
         selection.each(function (data) {
             // Convert data
             data = data.map(function (d, i) { // Maps every x,y pair into an array
-                return [xValue.call(data, d, i), yValue.call(data, d, i)];
+                return [xValue.call(data, d, i), yValue.call(data, d, i)]; // THIS WILL HAVE TO CHANGE IN ORDER TO GET MORE LINES: currently only gets one value: Make it a bigger array?
             });
 
             // Update the x-scale.
-            xScale.domain(d3.extent(data, function (d) { return d[0]; }))
+            xScale.domain(d3.extent(data, function (d) { return d[0]; })) 
                 .rangeRound([0, drawWidth]);
 
             // Update the y-scale.
             yScale.domain([d3.min(data, function (d) { return d[1] * 0.9 }), d3.max(data, function (d) { return d[1] * 1.1; })]) // Makes sure graph is always scaled to minimum and maximums of the graph
-                .range([drawHeight, 0])
+                .range([drawHeight, 0]) // THIS MUST CHANGE: if statement/loop which checks min/max for all lines
 
             // Creating SVG and G elements, renders in whatever element the chart is called in
             var svg = d3.select(this).selectAll("svg").data([data]).enter().append("svg")
@@ -74,7 +67,7 @@ var LineChart = function () {
 
             // Get hover data by using the bisector function to find the y values
 
-            var overlay = gEnter.append('rect') // UNFINISHED, WILL THROW ERRORS WHENEVER YOU MOUSE OVER CHART
+            var overlay = gEnter.append('rect')
                 .attr("class", "overlay")
                 .attr('width', drawWidth)
                 .attr('height', drawHeight);
@@ -144,7 +137,7 @@ var LineChart = function () {
 
             }
 
-            overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774 STILL UNFINISHED
+            overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774
                 var date = xScale.invert(d3.mouse(this)[0])
                 draw(date)
             })
@@ -163,7 +156,7 @@ var LineChart = function () {
             var g = svg.select("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-            // Update the line path.
+            // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
             g.select(".line")
                 .attr("fill", "none")
                 .attr("stroke", color)
