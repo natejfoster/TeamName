@@ -33,13 +33,13 @@ $.fn.lockLocation = function(start, stop) {
 
 $.fn.showTitle = function() {
   $(window).scroll(function(location) {
-    if ($(window).scrollTop() > 250) {
-      $('#title').animate({
-        opacity: 1
+    if ($(window).scrollTop() > 200) {
+      $('#title').css({
+        visibility: 'visible'
       });
-    } else if ($(window).scrollTop() <= 250) {
-      $('#title').animate({
-        opacity: 0
+    } else if ($(window).scrollTop() <= 200) {
+      $('#title').css({
+        visibility: 'hidden'
       });
     };
   });
@@ -97,7 +97,7 @@ $(function() {
             .call(myChart);
 
     $('#title').css({
-      opacity: 0
+      visibility: 'hidden'
     });
 
     $('#vis').lockLocation(720, 3400);
