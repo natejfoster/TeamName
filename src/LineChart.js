@@ -19,7 +19,9 @@ var LineChart = function () {
     var yValue = function(d) {return d[1]}
     var yValue2 = function(d) {return d[2]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
-    var line = d3.line().x(function(d) {return xScale(+d.date)}).y(function(d) {return yScale(+d.value)})  // Alternatively you can think of it as being dark green to represent money since many line charts plot time vs money
+    var line = d3.line() 
+                .x(function(d) {return xScale(+d.date)})
+                .y(function(d) {return yScale(+d.value)}) 
     var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
@@ -89,6 +91,33 @@ var LineChart = function () {
             g.select(".y.axis")
                 .call(yAxis)
 
+            // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
+            var lineData = [new Array, new Array]
+            for(var i = 0; i < data.length; i++) {
+                lineData[0].push({
+                    date: data[i][0],
+                    value: data[i][1]
+                })
+                lineData[1].push({
+                    date: data[i][0],
+                    value: data[i][2]
+                })
+            }
+            console.log(lineData)
+            var paths = g.selectAll(".path")
+             //   .data(lineData, function(d){return d.key}) 
+                .data(lineData)
+                .enter()
+                .append("path")
+                .attr("class", "path")
+                .attr("d", line)
+             //   .attr("d", function(d){return line(d.values)})
+                .attr("fill", "none")
+                .attr("stroke", color)
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", lineWidth)
+
             function drawHovers(date) {
                 var bisector = d3.bisector(function(d, x) {
                     return d[0] - x
@@ -105,31 +134,6 @@ var LineChart = function () {
                         value: dat[0][i]
                     }
                 }
-                
-                // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
-                var lineData = []
-                for(var i = 0; i < data.length; i++) {
-                    lineData[i] = [{
-                        date:data[i][0],
-                        value: data[i][1]
-                    }, 
-                    {
-                        date:data[i][0],
-                        value: data[i][2]
-                    }]
-                }
-                console.log(data)
-                var paths = g.selectAll(".path")
-                    .data(lineData) // CURRENTLY NANING, FIX LATER: 
-                    .enter()
-                    .append("path")
-                    .attr("class", "path")
-                    .attr("d", line)
-                    .attr("fill", "none")
-                    .attr("stroke", color)
-                    .attr("stroke-linejoin", "round")
-                    .attr("stroke-linecap", "round")
-                    .attr("stroke-width", lineWidth)
 
                 // Do a data-join (enter, update, exit) to draw circles
                 var circles = g.selectAll(".hoverCircle").data(datas)
