@@ -314,4 +314,6 @@ var LineChart = function() {
         textFunction = value;
         return myChart;
     }
+
+    return myChart;
 };
