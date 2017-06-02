@@ -100,7 +100,7 @@ $(function() {
       visibility: 'hidden'
     });
 
-    $('#vis').lockLocation(720, 7500);
+    $('#vis').lockLocation(780, 7450);
     $('#title').showTitle();
 
 
