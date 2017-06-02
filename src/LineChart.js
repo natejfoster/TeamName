@@ -88,8 +88,6 @@ var LineChart = function() {
                 .style("text-anchor", "middle")
                 .text(yAxisTitle)
 
-            // Get hover data by using the bisector function to find the y values
-
             var overlay = gEnter.append('rect')
                 .attr("class", "overlay")
                 .attr('width', drawWidth)
@@ -105,21 +103,21 @@ var LineChart = function() {
 
             // Update the x-axis.
             g.select(".x.axis")
-                .attr("transform", "translate(0," + yScale.range()[0] + ")")
+                .attr("transform", "translate(0," + yScale.range()[0] + ")") // Probably needs to change
                 .call(xAxis)
 
             // Update the y-axis.
             g.select(".y.axis")
                 .call(yAxis)
 
-            // Update the line path
-            var paths = g.selectAll(".path").data(data, function(d) {return d.word})
-             //   .data(lineData, function(d){return d.key}) 
-                .enter()
+            // Update the line path CHECK TO SEE IF THIS WORKS
+            var paths = g.selectAll(".path").data(data)
+            paths.enter()
                 .append("path")
                 .attr("class", "path")
-                .attr("d", line)
-             //   .attr("d", function(d){return line(d.values)})
+                .attr("d", function(d){
+                    console.log(d)
+                    return line(d)})
                 .attr("fill", "none")
                 .attr("stroke", color)
                 .attr("stroke-linejoin", "round")
@@ -127,48 +125,56 @@ var LineChart = function() {
                 .attr("stroke-width", lineWidth)
 
             function drawHovers(date) {
+                // Get hover data by using the bisector function to find the y values
                 var bisector = d3.bisector(function(d, x) {
-                    return d[0] - x
+                    return xValue(d) - x
                 }).left
 
-                data.sort(function (a, b) { // Sort by date
-                    return a[0] - b[0]
+                var dat = []
+                for(var i = 0; i < data.length; i++) {
+                    data[i].sort(function(a, b) {
+                        return xValue(a) - xValue(b)
+                    })
+                    dat[i] = data[i][bisector(data[i], date)] // Check if this is correct
+                }
+                data.sort(function (a, b) { // Sort by date CHECK THIS a[0] - b[0]
+                    return xValue(a) - xValue(b)
                 })
-                var dat = [data[bisector(data, date)]]
+       /*         var dat = [data[bisector(data, date)]]
                 var datas = []
                 for(var i = 1; i < dat[0].length; i++) {
                     datas[i-1] = {
                         date: dat[0][0],
                         value: dat[0][i]
                     }
-                }
+                } */
 
                 // Do a data-join (enter, update, exit) to draw circles
-                var circles = g.selectAll(".hoverCircle").data(datas)
+                var circles = g.selectAll(".hoverCircle").data(dat)
                 circles.enter()
                         .append("circle")
                         .attr("class", "hoverCircle")
                         .attr("r", 10)
-                        .attr("cx", function(d){return xScale(d.date)})
-                        .attr("cy", function(d){return yScale(d.value)})
+                        .attr("cx", function(d){return xScale(xValue(d))})
+                        .attr("cy", function(d){return yScale(yValue(d))})
             
-                circles.attr("cx", function(d){return xScale(d.date)}) // Necessary for updates, same with text below
-                        .attr("cy", function(d){return yScale(d.value)})
+                circles.attr("cx", function(d){return xScale(xValue(d))}) // Necessary for updates, same with text below
+                        .attr("cy", function(d){return yScale(yValue(d))})
 
                 circles.exit().remove()
 
                 // Do a data-join (enter, update, exit) draw text
-                var text = g.selectAll(".hoverText").data(datas)
+                var text = g.selectAll(".hoverText").data(dat)
 
                 text.enter() 
                         .append("text")
                         .attr("class", "hoverText")
-                        .attr("x", function(d){return xScale(d.date) + 10})
-                        .attr("y", function(d){return yScale(d.value) -5}) // Swap out with textFunction, change example.js
+                        .attr("x", function(d){return xScale(xValue(d)) + 10})
+                        .attr("y", function(d){return yScale(yValue(d)) -5}) // Swap out with textFunction, change example.js
                         .text(function(d){return textFunction(d)})
             
-                text.attr("x", function(d){return xScale(d.date) + 10})
-                        .attr("y", function(d){return yScale(d.value) -5})
+                text.attr("x", function(d){return xScale(xValue(d)) + 10})
+                        .attr("y", function(d){return yScale(yValue(d)) -5})
                         .text(function(d){return textFunction(d)})
                 text.exit().remove()
                 // "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()
@@ -184,14 +190,14 @@ var LineChart = function() {
                     .attr("stroke-linejoin", "round")
                     .attr("stroke-linecap", "round")
                     .attr("stroke-width", lineWidth)
-                    .attr("x1", function(d) {return xScale(d[0])})
+                    .attr("x1", function(d) {return xScale(xValue(d))})
                     .attr("y1", 0)
-                    .attr("x2", function(d) {return xScale(d[0])})
+                    .attr("x2", function(d) {return xScale(xValue(d))})
                     .attr("y2", drawHeight)
                 
-                focusLine.attr("x1", function(d) {return xScale(d[0])})
+                focusLine.attr("x1", function(d) {return xScale(xValue(d))})
                     .attr("y1", 0)
-                    .attr("x2", function(d) {return xScale(d[0])})
+                    .attr("x2", function(d) {return xScale(xValue(d))})
                     .attr("y2", drawHeight)
 
                 focusLine.exit().remove()
