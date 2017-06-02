@@ -22,5 +22,5 @@
 }
 
 .step:last-child {
-  margin-bottom:calc(100vh - 100px);
+  margin-bottom:calc(100vh - 450px);
 }

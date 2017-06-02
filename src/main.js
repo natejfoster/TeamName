@@ -100,7 +100,7 @@ $(function() {
       visibility: 'hidden'
     });
 
-    $('#vis').lockLocation(720, 3400);
+    $('#vis').lockLocation(720, 7500);
     $('#title').showTitle();
 
 
@@ -124,8 +124,35 @@ $(function() {
                 case 5:
                     var fillColor = 'purple';
                     break;
-                default:
+                case 6:
                     var fillColor = 'black';
+                    break;
+                case 7:
+                    var fillColor = 'green';
+                    break;
+                case 8:
+                    var fillColor = 'purple';
+                    break;
+                case 9:
+                    var fillColor = 'red';
+                    break;
+                case 10:
+                    var fillColor = 'green';
+                    break;
+                case 11:
+                    var fillColor = 'red';
+                    break;
+                case 12:
+                    var fillColor = 'orange';
+                    break;
+                case 13:
+                    var fillColor = 'yellow';
+                    break;
+                case 14:
+                    var fillColor = 'purple';
+                    break;
+                default:
+                    var fillColor = 'blue';
                     break;
             }
             myChart.fillColor(fillColor);
