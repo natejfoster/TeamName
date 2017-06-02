@@ -5,9 +5,9 @@ $(function() {
         var formatDate = d3.timeParse("%Y");
         var myChart = LineChart()
             .xValue(function(d) {
-                return formatDate(d.year)
+                formatDate(+d.year)
             })
-            .yValue(function(d) { return d.occurences})
+            .yValue(function(d) { return +d.occurences})
             .focusColor("steelblue")
             .height(500)
             .color("#AAA")
@@ -15,7 +15,7 @@ $(function() {
             .xAxisTitle("Year")
             .yAxisTitle("Number of Occurences")
             .title("Language in Motion")
-            .words(["Airscrew", "Jeep"])
+            .words(["Biodiversity", "Bangladesh"])
             .textFunction(function(d) {return d.value})
 
         var chartWrapper = d3.select("#vis")

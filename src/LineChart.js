@@ -1,6 +1,6 @@
 "use strict"
 // TODO: Get multiple lines working (mark code that will 100% have to change to make it work), write out which word is which line, multiple colors for different lines, transitions
-// Use TP4 code since data format matches that
+// GET RID OF ALL INSTANCES OF HARD CODING
 var LineChart = function() {
     // Set default values
     var margin = {
@@ -14,14 +14,14 @@ var LineChart = function() {
     var height = 560;
     var xScale = d3.scaleTime().rangeRound([0, width]);
     var yScale = d3.scaleLinear().range([height, 0]);
-    var xAxis = d3.axisBottom(xScale);
+    var xAxis = d3.axisBottom(xScale).tickFormat(d3.format("Y")); // Unhardcode tick format into variable: Get rid
     var yAxis = d3.axisLeft(yScale);
     var xValue = function(d) {return d[0]} // Values by default are set to first values in array
     var yValue = function(d) {return d[1]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
     var line = d3.line() 
-                .x(function(d) {return xScale(xValue)})
-                .y(function(d) {return yScale(yValue)}) 
+                .x(function(d) {return xScale(+d.year)})
+                .y(function(d) {return yScale(+d.occurences)}) 
     var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
@@ -58,13 +58,22 @@ var LineChart = function() {
             }
             data = dataHolder; // For less confusion later
 
-            // Update the x-scale
-            xScale.domain(d3.extent(data, function (d) {return xValue(d)}))
-                .rangeRound([0, drawWidth]);
+            var allValues = [];
+            data.forEach(function(d) {
+                d.forEach(function(d) {
+                    allValues.push(+d.occurences); // Hardcoded in: Get rid of later
+                })
+            })
 
+            // Update the x-scale
+            var xExtent = d3.extent(data[0], function(d) { // Hardcoded: check later
+                return +d.year;
+            });
+            xScale.domain([xExtent[0], xExtent[1]]).rangeRound([0, drawWidth]);
             // Update the y-scale
-            yScale.domain([d3.min(data, function (d) { return yValue(d) * 0.9}), d3.max(data, function (d) { return yValue(d) * 1.1})]) // Makes sure graph is always scaled to minimum and maximums of the graph
-                .range([drawHeight, 0]) // THIS MUST CHANGE: if statement/loop which checks min/max for all lines
+
+           var yExtent = d3.extent(allValues);
+            yScale.domain([yExtent[0] * 0.9, yExtent[1] * 1.1]).rangeRound([drawHeight, 0]);
 
             // Creating SVG and G elements, renders in whatever element the chart is called in
             var svg = d3.select(this).selectAll("svg").data([data]).enter().append("svg")
@@ -84,7 +93,7 @@ var LineChart = function() {
                 .text(xAxisTitle)
 
             gEnter.append("text").attr("class", "title")
-                .attr("transform", "rotate(-90) translate(" + -(height / 3) + ", -40)")
+                .attr("transform", "rotate(-90) translate(" + -(height / 3) + ", -50)")
                 .style("text-anchor", "middle")
                 .text(yAxisTitle)
 
@@ -115,9 +124,7 @@ var LineChart = function() {
             paths.enter()
                 .append("path")
                 .attr("class", "path")
-                .attr("d", function(d){
-                    console.log(d)
-                    return line(d)})
+                .attr("d", function(d){return line(d)})
                 .attr("fill", "none")
                 .attr("stroke", color)
                 .attr("stroke-linejoin", "round")
@@ -129,7 +136,6 @@ var LineChart = function() {
                 var bisector = d3.bisector(function(d, x) {
                     return xValue(d) - x
                 }).left
-
                 var dat = []
                 for(var i = 0; i < data.length; i++) {
                     data[i].sort(function(a, b) {
@@ -204,6 +210,8 @@ var LineChart = function() {
             }
 
             overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774
+      //          console.log(xScale(xScale.invert(d3.mouse(this)[0])))
+      //          console.log(xScale.invert(d3.mouse(this)[0]))
                 var date = xScale.invert(d3.mouse(this)[0])
                 drawHovers(date)
             })
@@ -298,14 +306,17 @@ var LineChart = function() {
     myChart.xValue = function (value) {
         if (!arguments.length) return xValue;
         xValue = value;
-        line.x(function(d) {return xScale(xValue)}); // Check to see if this and line.y are necessary
+        
+   //     line.x(function(d) {return xScale(xValue)}); // Check to see if this and line.y are necessary
+        xAxis.scale(xScale);
         return myChart;
     };
 
     myChart.yValue = function (value) {
         if (!arguments.length) return yValue;
         yValue = value;
-        line.y(function(d) {return yScale(yValue)});
+    //    line.y(function(d) {return yScale(yValue)});
+        yAxis.scale(yScale);
         return myChart;
     };
 
