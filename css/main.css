@@ -23,7 +23,10 @@ p {
 
 #title {
   float: left;
-  width: 200px;
+  width: 300px;
+  font-size: 25px;
+  padding-left: 15px;
+  padding-top: 10px;
 }
 
 #menu {
@@ -42,7 +45,7 @@ p {
   padding-top: 60px;
 }
 
-#content {
+#story {
   padding-top: 60px;
 }
 
