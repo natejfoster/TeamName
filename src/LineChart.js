@@ -1,6 +1,7 @@
 "use strict"
 // TODO: Get multiple lines working (mark code that will 100% have to change to make it work), write out which word is which line, multiple colors for different lines, transitions
-var LineChart = function () {
+// Use TP4 code since data format matches that
+var LineChart = function() {
     // Set default values
     var margin = {
         top: 50,
@@ -17,11 +18,10 @@ var LineChart = function () {
     var yAxis = d3.axisLeft(yScale);
     var xValue = function(d) {return d[0]} // Values by default are set to first values in array
     var yValue = function(d) {return d[1]}
-    var yValue2 = function(d) {return d[2]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
     var line = d3.line() 
-                .x(function(d) {return xScale(+d.date)})
-                .y(function(d) {return yScale(+d.value)}) 
+                .x(function(d) {return xScale(xValue)})
+                .y(function(d) {return yScale(yValue)}) 
     var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
@@ -29,20 +29,41 @@ var LineChart = function () {
     var yAxisTitle = "Y Axis"
     var drawWidth = width - margin.left - margin.right - 300; // Ensures enough space for the text to appear
     var drawHeight = height - margin.top - margin.bottom;
+    var words = [] // Words to include within chart, put in as an array
+    var textFunction = function(d) {return yValue}
 
     function myChart(selection) {
         selection.each(function (data) {
-            // Convert data
-            data = data.map(function (d, i) { // Maps every x,y pair into an array
-                return [xValue.call(data, d, i), yValue.call(data, d, i), yValue2.call(data, d, i)]; // THIS WILL HAVE TO CHANGE IN ORDER TO GET MORE LINES: currently only gets one value: Make it a bigger array?
-            });
+            // Filter out data using words
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+            var data = data.filter(function(d) {
+                for(var i = 0 ; i < words.length; i++) {
+                    if(words[i] == d.word) {
+                        return true;
+                    }
+                }
+                return false;
+            })
             
-            // Update the x-scale.
-            xScale.domain(d3.extent(data, function (d) { return d[0]; }))
+            // Sort words into buckets. Done after filtering so that it doesn't take a million years to do this
+            var dataHolder = []
+            for(var i = 0; i < words.length; i++) {
+                var wordArray = []
+                for(var j = 0; j < data.length; j++) {
+                    if(words[i] == data[j].word) {
+                        wordArray.push(data[j])
+                    }
+                }
+                dataHolder[i] = wordArray
+            }
+            data = dataHolder; // For less confusion later
+
+            // Update the x-scale
+            xScale.domain(d3.extent(data, function (d) {return xValue(d)}))
                 .rangeRound([0, drawWidth]);
 
-            // Update the y-scale.
-            yScale.domain([d3.min(data, function (d) { return Math.min(d[1], d[2]) * 0.9 }), d3.max(data, function (d) { return Math.max(d[1], d[2]) * 1.1; })]) // Makes sure graph is always scaled to minimum and maximums of the graph
+            // Update the y-scale
+            yScale.domain([d3.min(data, function (d) { return yValue(d) * 0.9}), d3.max(data, function (d) { return yValue(d) * 1.1})]) // Makes sure graph is always scaled to minimum and maximums of the graph
                 .range([drawHeight, 0]) // THIS MUST CHANGE: if statement/loop which checks min/max for all lines
 
             // Creating SVG and G elements, renders in whatever element the chart is called in
@@ -91,22 +112,9 @@ var LineChart = function () {
             g.select(".y.axis")
                 .call(yAxis)
 
-            // Update the line path. THIS WILL ALSO PROBABLY HAVE TO CHANGE: Might need more iterations for every line?
-            var lineData = [new Array, new Array]
-            for(var i = 0; i < data.length; i++) {
-                lineData[0].push({
-                    date: data[i][0],
-                    value: data[i][1]
-                })
-                lineData[1].push({
-                    date: data[i][0],
-                    value: data[i][2]
-                })
-            }
-            console.log(lineData)
-            var paths = g.selectAll(".path")
+            // Update the line path
+            var paths = g.selectAll(".path").data(data, function(d) {return d.word})
              //   .data(lineData, function(d){return d.key}) 
-                .data(lineData)
                 .enter()
                 .append("path")
                 .attr("class", "path")
@@ -156,14 +164,15 @@ var LineChart = function () {
                         .append("text")
                         .attr("class", "hoverText")
                         .attr("x", function(d){return xScale(d.date) + 10})
-                        .attr("y", function(d){return yScale(d.value) -5})
-                        .text(function(d){return "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()})
+                        .attr("y", function(d){return yScale(d.value) -5}) // Swap out with textFunction, change example.js
+                        .text(function(d){return textFunction(d)})
             
                 text.attr("x", function(d){return xScale(d.date) + 10})
                         .attr("y", function(d){return yScale(d.value) -5})
-                        .text(function(d){return "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()})
+                        .text(function(d){return textFunction(d)})
                 text.exit().remove()
-                
+                // "Word Usage: " + d.value + " Per Million in " + d.date.getFullYear()
+
                 // http://bl.ocks.org/mikehadlow/93b471e569e31af07cd3 inspiration for focus lines
                 var focusLine = g.selectAll(".focusLine").data(dat)
 
@@ -283,33 +292,26 @@ var LineChart = function () {
     myChart.xValue = function (value) {
         if (!arguments.length) return xValue;
         xValue = value;
+        line.x(function(d) {return xScale(xValue)}); // Check to see if this and line.y are necessary
         return myChart;
     };
 
     myChart.yValue = function (value) {
         if (!arguments.length) return yValue;
         yValue = value;
+        line.y(function(d) {return yScale(yValue)});
         return myChart;
     };
 
-    myChart.yValue2 = function (value) {
-        if (!arguments.length) return yValue2;
-        yValue2 = value;
+    myChart.words = function(value) { // Must be an array of words that you want to see in chart, else fails
+        if (!arguments.length) return words; 
+        words = value;
         return myChart;
-    };
-
-    // The x-accessor for the path generator; xScale * xValue.
-    function X(d) {
-        return xScale(d[0]);
     }
 
-    // The y-accessor for the path generator; yScale * yValue.
-    function Y(d) {
-        return yScale(d[1]);
+    myChart.textFunction = function(value) {
+        if (!arguments.length) return textFunction; 
+        textFunction = value;
+        return myChart;
     }
-
-    function Y2(d) {
-        return yScale(d[2])
-    }
-    return myChart;
 };
