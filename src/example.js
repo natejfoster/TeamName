@@ -10,7 +10,6 @@ $(function() {
             .yValue(function(d) { return +d.occurences})
             .focusColor("steelblue")
             .height(500)
-            .color("#AAA")
             .lineWidth(4)
             .xAxisTitle("Year")
             .yAxisTitle("Number of Occurences")
@@ -18,6 +17,7 @@ $(function() {
             .words(["Biodiversity", "Bangladesh"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
             .timeRange([formatDate(1950), formatDate(2000)])
+            .colorScale(["Blue", "Brown"])
 
         var chartWrapper = d3.select("#vis")
                         .datum(data)

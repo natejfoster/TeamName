@@ -17,9 +17,9 @@ var LineChart = function() {
     var yScale = d3.scaleLinear().range([height, 0]);
     var xAxis = d3.axisBottom(xScale)
     var yAxis = d3.axisLeft(yScale);
-    var xValue = function(d) {return d[0]} // Values by default are set to first values in array
-    var yValue = function(d) {return d[1]}
-    var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
+    var wordValue = function(d) {return d[0]} // Where to find the "word" you're tracking: categories. Ex: countries, words
+    var xValue = function(d) {return d[1]} // Values by default are set to first values in array
+    var yValue = function(d) {return d[2]}
     var line = d3.line() 
                 .x(function(d) {return xScale(xValue(d))})
                 .y(function(d) {return yScale(yValue(d))}) 
@@ -122,6 +122,8 @@ var LineChart = function() {
             g.select(".y.axis")
                 .call(yAxis)
 
+            colorScale.domain(words)
+
             // Update the line path
             var paths = g.selectAll(".path").data(data)
             paths.enter()
@@ -129,7 +131,7 @@ var LineChart = function() {
                 .attr("class", "path")
                 .attr("d", function(d){return line(d)})
                 .attr("fill", "none")
-                .attr("stroke", color)
+                .attr("stroke", function(d){return colorScale(d)})
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", lineWidth)
@@ -248,14 +250,6 @@ var LineChart = function() {
         return myChart;
     };
 
-    myChart.color = function (value) {
-        if(!arguments.length) {
-            return color;
-        }
-        color = value;
-        return myChart;
-    }
-
     myChart.focusColor = function (value) {
         if(!arguments.length) {
             return focusColor;
@@ -296,11 +290,16 @@ var LineChart = function() {
         return myChart;
     }
 
+    myChart.wordValue = function (value) {
+        if(!arguments.length) return wordValue;
+        wordValue = value;   
+        return myChart;
+    };
+
     // Specifies the xValue and yValue respectively to set to
     myChart.xValue = function (value) {
         if(!arguments.length) return xValue;
-        xValue = value;
-        
+        xValue = value;   
         line.x(function(d) {return xScale(xValue(d))});
         xAxis.scale(xScale);
         return myChart;
@@ -335,7 +334,7 @@ var LineChart = function() {
 
     myChart.colorScale = function(value) { // Give an array of colors to make this one work
         if(!arguments.length) return colorScale;
-        colrScale = d3.scaleOrdinal(value);
+        colorScale = d3.scaleOrdinal(value);
         return myChart;
     }
 
