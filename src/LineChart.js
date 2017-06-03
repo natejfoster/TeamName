@@ -1,5 +1,5 @@
 "use strict"
-// TODO: transitions, fix colors spilling off left sometimes (1961)
+// TODO: fix colors spilling off left sometimes (1961)
 // Get rid of js files: cdn should be good enough
 var LineChart = function() {
     // Set default values
@@ -33,6 +33,7 @@ var LineChart = function() {
     var textFunction = function(d){return yValue(d)}
     var timeRange = [new Date("0000-01-01T08:00:00.000Z"), new Date("9999-01-01T08:00:00.000Z")]
     var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    var transitionDuration = 2000;
 
     function myChart(selection) {
         selection.each(function (data) {
@@ -139,19 +140,19 @@ var LineChart = function() {
                 })
                 .attr("stroke-dashoffset", function(d){return d3.select(this).node().getTotalLength()})
                 .transition() // Offsets entire line to the LEFT of the graph
-                .duration(2000)
+                .duration(transitionDuration)
                 .attr("stroke-dashoffset", function(d) { // Returns line to middle of the graph
                     return 0;
                 })
 
             paths.attr("stroke-dasharray", "none")
                 .transition()
-                .duration(2000)
+                .duration(transitionDuration)
                 .attr("d", function(d){return line(d)})
 
             paths.exit()
                 .transition()
-                .duration(2000)
+                .duration(transitionDuration)
                 .attr("stroke-dashoffset", function(d) { 
                     return d3.select(this).node().getTotalLength();
                 })
@@ -360,6 +361,12 @@ var LineChart = function() {
     myChart.colorScale = function(value) { // Give an array of colors to make this one work
         if(!arguments.length) return colorScale;
         colorScale = d3.scaleOrdinal(value);
+        return myChart;
+    }
+
+    myChart.transitionDuration = function(value) {
+        if(!arguments.length) return transitionDuration;
+        transitionDuration = value;
         return myChart;
     }
 
