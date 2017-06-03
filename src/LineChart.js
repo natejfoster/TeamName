@@ -1,6 +1,5 @@
 "use strict"
-// TODO: multiple colors for different lines, transitions
-// GET RID OF ALL INSTANCES OF HARD CODING 
+// TODO: transitions
 // Get rid of js files: cdn should be good enough
 var LineChart = function() {
     // Set default values
@@ -131,7 +130,7 @@ var LineChart = function() {
                 .attr("class", "path")
                 .attr("d", function(d){return line(d)})
                 .attr("fill", "none")
-                .attr("stroke", function(d){return colorScale(d)})
+                .attr("stroke", function(d){return colorScale(categories(d[0]))})
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", lineWidth)
