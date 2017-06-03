@@ -388,10 +388,10 @@ $(function() {
             .xAxisTitle("Year")
             .yAxisTitle("Number of Occurences")
             .title("Language in Motion")
-            .words(["Astronaut", "Aerospace", "Software"])
+            .words(["Astronaut", "Aerospace", "Software", "IEEE"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1961), formatDate(2000)])
-            .colorScale(["Blue", "Green", "Orange"])
+            .timeRange([formatDate(1960), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange", "Red"])
 
         var chartWrapper = d3.select("#vis11")
                         .datum(data)
@@ -412,7 +412,7 @@ $(function() {
             .title("Language in Motion")
             .words(["Microprocessor"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1961), formatDate(2000)])
+            .timeRange([formatDate(1970), formatDate(2000)])
             .colorScale(["Blue", "Green", "Orange"])
 
         var chartWrapper = d3.select("#vis12")
