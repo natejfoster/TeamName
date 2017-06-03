@@ -1,5 +1,5 @@
 "use strict"
-// TODO: transitions
+// TODO: transitions, fix colors spilling off left sometimes (1961)
 // Get rid of js files: cdn should be good enough
 var LineChart = function() {
     // Set default values
@@ -122,7 +122,6 @@ var LineChart = function() {
                 .call(yAxis)
 
             colorScale.domain(words)
-
             // Update the line path
             var paths = g.selectAll(".path").data(data)
             paths.enter()
@@ -134,6 +133,33 @@ var LineChart = function() {
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", lineWidth)
+                .attr("stroke-dasharray", function(d){ // Space between dashes = length of the line
+                    var length = d3.select(this).node().getTotalLength()
+                    return(length + " " + length)
+                })
+                .attr("stroke-dashoffset", function(d){return d3.select(this).node().getTotalLength()})
+                .transition() // Offsets entire line to the LEFT of the graph
+                .duration(2000)
+                .attr("stroke-dashoffset", function(d) { // Returns line to middle of the graph
+                    return 0;
+                })
+
+            paths.attr("stroke-dasharray", "none")
+                .transition()
+                .duration(2000)
+                .attr("d", function(d){return line(d)})
+
+            paths.exit()
+                .transition()
+                .duration(2000)
+                .attr("stroke-dashoffset", function(d) { 
+                    return d3.select(this).node().getTotalLength();
+                })
+                .attr("stroke-dasharray", function(d) {
+                    var length = d3.select(this).node().getTotalLength();
+                    return(length + " " + length);
+                })
+                .remove()
 
             function drawHovers(date) {
                 // Get hover data by using the bisector function to find the y values

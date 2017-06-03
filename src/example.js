@@ -3,7 +3,7 @@ $(function() {
 
     d3.tsv("data/words.tsv", function(error, data) {
         var formatDate = d3.timeParse("%Y");
-        var myChart = LineChart()
+        var chart = LineChart()
             .categories(function(d) {return d.word})
             .xValue(function(d) { return formatDate(+d.year)})
             .yValue(function(d) { return +d.occurences})
@@ -15,11 +15,11 @@ $(function() {
             .title("Language in Motion")
             .words(["Biodiversity", "Bangladesh"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1980), formatDate(2000)])
+            .timeRange([formatDate(1961), formatDate(2000)])
             .colorScale(["Blue", "Brown"])
 
         var chartWrapper = d3.select("#vis")
                         .datum(data)
-                        .call(myChart);
+                        .call(chart);
     })
 })
