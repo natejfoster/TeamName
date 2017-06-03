@@ -47,6 +47,7 @@ $.fn.showTitle = function() {
 
 $(function() {
      d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -61,88 +62,94 @@ $(function() {
             .words(["Biodiversity", "Bangladesh"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
             .timeRange([formatDate(1961), formatDate(2000)])
-            .colorScale(["Blue", "Brown"])
+            .colorScale(["Blue", "Green"])
 
-        var chartWrapper = d3.select("#vis")
-                        .datum(data)
-                        .call(chart);
-                           var update = function(index) {
+        // var chartWrapper = d3.select("#vis")
+                        // .datum(data)
+                        // .call(chart);
+        var update = function(index) {
             switch (index) {
                 case 0:
                     console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
-                    var fillColor = 'blue';
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 1:
                     console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
-                    var fillColor = 'red';
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 2:
                     console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
-                    var fillColor = 'orange';
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 3:
                     console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
-                    var fillColor = 'black';
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 4:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'green';
                     break;
                 case 5:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'purple';
                     break;
                 case 6:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'black';
                     break;
                 case 7:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'green';
                     break;
                 case 8:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'purple';
                     break;
                 case 9:
                     console.log("HIHIHIHIHIH")
+                    var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
-                    var fillColor = 'red';
                     break;
                 case 10:
                     var words = ["War", "Peace"];
-                    var fillColor = 'green';
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 11:
                     var words = ["War", "Peace"];
-                    var fillColor = 'red';
+                    var colorScale = ["Green", "Red"];
                     break;
-                case 12:
-                    var fillColor = 'orange';
+                case 12:             
+                    var words = ["War", "Peace"];
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 13:
-                    var fillColor = 'yellow';
+                    var words = ["War", "Peace"];
+                    var colorScale = ["Green", "Red"];
                     break;
                 case 14:
-                    var fillColor = 'purple';
+                    var words = ["War", "Peace"];
+                    var colorScale = ["Green", "Red"];
                     break;
                 default:
-                    var fillColor = 'blue';
+                    var words = ["War", "Peace"];
+                    var colorScale = ["Green", "Red"];
                     break;
             }
             chart.words(words);
-            // chart.fillColor(fillColor);
-            chartWrapper.datum(data).call(chart);
-            
+            chart.colorScale(colorScale);
+            // chartWrapper.datum(data).call(chart);
+            console.log("HI");
+            chart.colorScale(["Blue", "Blue"]);
+            // chartWrapper.datum(data).call(chart);
         };
         // Create scroller
         var scroll = scroller()
@@ -155,58 +162,356 @@ $(function() {
         scroll.on('active', function(index) {
             update(index);
         })
+        // console.log(data);
     })
     
-    // $('#TechnologyButton').click(changeChartFilter);
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Happy", "Angry"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green"])
 
-    // function changeChartFilter(event, element){
-    //         console.log(event);
-    //         console.log("HI");
-    //         d3.csv('data/ngramClassification.csv', function(error, data2) {
-    //         console.log(data2);
-    //         console.log(data2);
-    //         console.log(data2[0]['Type']);
-    //         var nested_data = d3.nest().key(function(d) { return d.Type; })
-    //         .entries(data2);
-    //         console.log(nested_data);
-    //         return nested_data;
-    //     });
-    // };
+        var chartWrapper = d3.select("#vis1")
+                        .datum(data)
+                        .call(chart);
+     });
 
-        // Initialize charting tool
-        var myChart = BarChart().xVar('name')
-            .yVar('value')
-            .xAxisLabel('Bar')
-            .yAxisLabel('Arbitrary Value')
-            .width(500)
-            .height(250);
+        
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Fuck", "Shit", "Damn"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
 
-    // $("a").on('click', function(event) {
-    //   if (this.hash !== "") {
-    //     event.preventDefault();
-    //     var hash = this.hash;
-    //     $('html, body').animate({
-    //       scrollTop: $(hash).offset().top
-    //     }, 800, function(){
-    //       window.location.hash = hash;
-    //     });
-    //   }
-    // });
+        var chartWrapper = d3.select("#vis2")
+                        .datum(data)
+                        .call(chart);
+     });
 
-    // Initialize charting tool
-    // var myChart = BarChart().xVar('name')
-    //     .yVar('value')
-    //     .xAxisLabel('Bar')
-    //     .yAxisLabel('Arbitrary Value')
-    //     .width(500)
-    //     .height(250);
+             
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Ought", "Thee"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis3")
+                        .datum(data)
+                        .call(chart);
+     });
+
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Russia", "USSR"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Red"])
+
+        var chartWrapper = d3.select("#vis4")
+                        .datum(data)
+                        .call(chart);
+     });
+
+   
+
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Automobile"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green"])
+
+        var chartWrapper = d3.select("#vis5")
+                        .datum(data)
+                        .call(chart);
+     });
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Aviators", "Biplane", "Taxi"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis6")
+                        .datum(data)
+                        .call(chart);
+     });
+    
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Automotive", "Broadcasting", "Airscrew"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis7")
+                        .datum(data)
+                        .call(chart);
+     });
+
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Broadcasts"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis8")
+                        .datum(data)
+                        .call(chart);
+     });
+
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Jeeps", "Radar"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis9")
+                        .datum(data)
+                        .call(chart);
+     });
 
 
-        // Build chart
-        // var chart = d3.select('#vis')
-        //     .datum(data)
-        //     .call(myChart);
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Transistors", "Radar"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
 
+        var chartWrapper = d3.select("#vis10")
+                        .datum(data)
+                        .call(chart);
+     });
+
+    d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Astronauts", "Aerospace", "Software"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis11")
+                        .datum(data)
+                        .call(chart);
+     });
+
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Microprocessor"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis12")
+                        .datum(data)
+                        .call(chart);
+     });
+
+     d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Microsoft", "Robotics"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange"])
+
+        var chartWrapper = d3.select("#vis13")
+                        .datum(data)
+                        .call(chart);
+     });
+        d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["Netscape", "Cyberspace", "HTML", "URL", "HTTP"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange", "Purple", "Red", "Brown"])
+
+        var chartWrapper = d3.select("#vis14")
+                        .datum(data)
+                        .call(chart);
+     });
+        d3.tsv("data/words.tsv", function(error, data) {
+         console.log(data);
+        var formatDate = d3.timeParse("%Y");
+        var chart = LineChart()
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
+            .yValue(function(d) { return +d.occurences})
+            .focusColor("steelblue")
+            .height(500)
+            .lineWidth(4)
+            .xAxisTitle("Year")
+            .yAxisTitle("Number of Occurences")
+            .title("Language in Motion")
+            .words(["ITunes", "Google", "Microarrays", "DVDS", "Blogs"])
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
+            .timeRange([formatDate(1961), formatDate(2000)])
+            .colorScale(["Blue", "Green", "Orange", "Purple", "Red"])
+
+        var chartWrapper = d3.select("#vis15")
+                        .datum(data)
+                        .call(chart);
+     });
+   
     $('#title').css({
       visibility: 'hidden'
     });
@@ -215,70 +520,5 @@ $(function() {
     $('#title').showTitle();
 
 
-        // var update = function(index) {
-        //     switch (index) {
-        //         case 0:
-        //             var fillColor = 'blue';
-        //             break;
-        //         case 1:
-        //             var fillColor = 'red';
-        //             break;
-        //         case 2:
-        //             var fillColor = 'orange';
-        //             break;
-        //         case 3:
-        //             var fillColor = 'black';
-        //             break;
-        //         case 4:
-        //             var fillColor = 'green';
-        //             break;
-        //         case 5:
-        //             var fillColor = 'purple';
-        //             break;
-        //         case 6:
-        //             var fillColor = 'black';
-        //             break;
-        //         case 7:
-        //             var fillColor = 'green';
-        //             break;
-        //         case 8:
-        //             var fillColor = 'purple';
-        //             break;
-        //         case 9:
-        //             var fillColor = 'red';
-        //             break;
-        //         case 10:
-        //             var fillColor = 'green';
-        //             break;
-        //         case 11:
-        //             var fillColor = 'red';
-        //             break;
-        //         case 12:
-        //             var fillColor = 'orange';
-        //             break;
-        //         case 13:
-        //             var fillColor = 'yellow';
-        //             break;
-        //         case 14:
-        //             var fillColor = 'purple';
-        //             break;
-        //         default:
-        //             var fillColor = 'blue';
-        //             break;
-        //     }
-        //     myChart.fillColor(fillColor);
-        //     chart.datum(data).call(myChart);
-            
-        // };
-        // // Create scroller
-        // var scroll = scroller()
-        //     .container(d3.select('#graphic'));
-
-        // // Select all steps
-        // scroll(d3.selectAll('.step'));
-
-        // // Add the update function to all steps
-        // scroll.on('active', function(index) {
-        //     update(index);
-        // })
+    
 });
