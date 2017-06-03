@@ -22,5 +22,9 @@ $(function() {
         var chartWrapper = d3.select("#vis")
                         .datum(data)
                         .call(chart);
+
+        // chart.colorScale(["Blue", "Blue"]);
+        // chart.words(["Happy", "Angry"]);
+        chartWrapper.datum(data).call(chart);
     })
 })

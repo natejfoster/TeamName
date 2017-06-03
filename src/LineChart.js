@@ -343,6 +343,7 @@ var LineChart = function() {
     myChart.words = function(value) { // Must be an array of words that you want to see in chart, else fails
         if(!arguments.length) return words; 
         words = value;
+    
         return myChart;
     }
 
