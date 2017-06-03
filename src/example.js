@@ -5,7 +5,7 @@ $(function() {
         var formatDate = d3.timeParse("%Y");
         var myChart = LineChart()
             .xValue(function(d) {
-                formatDate(+d.year)
+                return formatDate(+d.year)
             })
             .yValue(function(d) { return +d.occurences})
             .focusColor("steelblue")

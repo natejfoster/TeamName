@@ -14,14 +14,14 @@ var LineChart = function() {
     var height = 560;
     var xScale = d3.scaleTime().rangeRound([0, width]);
     var yScale = d3.scaleLinear().range([height, 0]);
-    var xAxis = d3.axisBottom(xScale).tickFormat(d3.format("Y")); // Unhardcode tick format into variable: Get rid
+    var xAxis = d3.axisBottom(xScale)
     var yAxis = d3.axisLeft(yScale);
     var xValue = function(d) {return d[0]} // Values by default are set to first values in array
     var yValue = function(d) {return d[1]}
     var color = "#228b22" // This one is more arbitrary than the other defaults: I just like dark green
     var line = d3.line() 
-                .x(function(d) {return xScale(+d.year)})
-                .y(function(d) {return yScale(+d.occurences)}) 
+                .x(function(d) {return xScale(xValue(d))})
+                .y(function(d) {return yScale(yValue(d))}) 
     var focusColor = "black" // Colors the vertical "focus line"
     var lineWidth = 1.5
     var title = "Chart Title"
@@ -61,13 +61,13 @@ var LineChart = function() {
             var allValues = [];
             data.forEach(function(d) {
                 d.forEach(function(d) {
-                    allValues.push(+d.occurences); // Hardcoded in: Get rid of later
+                    allValues.push(yValue(d)); 
                 })
             })
 
             // Update the x-scale
-            var xExtent = d3.extent(data[0], function(d) { // Hardcoded: check later
-                return +d.year;
+            var xExtent = d3.extent(data[0], function(d) {
+                return xValue(d);
             });
             xScale.domain([xExtent[0], xExtent[1]]).rangeRound([0, drawWidth]);
             // Update the y-scale
@@ -119,7 +119,7 @@ var LineChart = function() {
             g.select(".y.axis")
                 .call(yAxis)
 
-            // Update the line path CHECK TO SEE IF THIS WORKS
+            // Update the line path
             var paths = g.selectAll(".path").data(data)
             paths.enter()
                 .append("path")
@@ -134,6 +134,8 @@ var LineChart = function() {
             function drawHovers(date) {
                 // Get hover data by using the bisector function to find the y values
                 var bisector = d3.bisector(function(d, x) {
+                    console.log(xValue(d))
+                    console.log(xValue(d) - x)
                     return xValue(d) - x
                 }).left
                 var dat = []
@@ -210,8 +212,6 @@ var LineChart = function() {
             }
 
             overlay.on("mousemove", function () { // http://bl.ocks.org/WilliamQLiu/76ae20060e19bf42d774
-      //          console.log(xScale(xScale.invert(d3.mouse(this)[0])))
-      //          console.log(xScale.invert(d3.mouse(this)[0]))
                 var date = xScale.invert(d3.mouse(this)[0])
                 drawHovers(date)
             })
@@ -307,7 +307,7 @@ var LineChart = function() {
         if (!arguments.length) return xValue;
         xValue = value;
         
-   //     line.x(function(d) {return xScale(xValue)}); // Check to see if this and line.y are necessary
+        line.x(function(d) {return xScale(xValue(d))});
         xAxis.scale(xScale);
         return myChart;
     };
@@ -315,7 +315,7 @@ var LineChart = function() {
     myChart.yValue = function (value) {
         if (!arguments.length) return yValue;
         yValue = value;
-    //    line.y(function(d) {return yScale(yValue)});
+        line.y(function(d) {return yScale(yValue(d))});
         yAxis.scale(yScale);
         return myChart;
     };
