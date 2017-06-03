@@ -16,7 +16,7 @@ $(function() {
             .yAxisTitle("Number of Occurences")
             .title("Language in Motion")
             .words(["Biodiversity", "Bangladesh"])
-            .textFunction(function(d) {return d.value})
+            .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
             .timeRange([formatDate(1950), formatDate(2000)])
 
         var chartWrapper = d3.select("#vis")

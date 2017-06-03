@@ -1,7 +1,6 @@
 "use strict"
-// TODO: Get multiple lines working (mark code that will 100% have to change to make it work), write out which word is which line, multiple colors for different lines, transitions
+// TODO: write out which word is which line, multiple colors for different lines, transitions
 // GET RID OF ALL INSTANCES OF HARD CODING 
-//FILTERING BY DATE
 var LineChart = function() {
     // Set default values
     var margin = {
@@ -31,7 +30,7 @@ var LineChart = function() {
     var drawWidth = width - margin.left - margin.right - 300; // Ensures enough space for the text to appear
     var drawHeight = height - margin.top - margin.bottom;
     var words = [] // Words to include within chart, put in as an array
-    var textFunction = function(d) {return yValue}
+    var textFunction = function(d){return yValue(d)}
     var timeRange = [new Date("0000-01-01T08:00:00.000Z"), new Date("9999-01-01T08:00:00.000Z")]
 
     function myChart(selection) {
@@ -148,14 +147,6 @@ var LineChart = function() {
                 data.sort(function (a, b) { // Sort by date CHECK THIS a[0] - b[0]
                     return xValue(a) - xValue(b)
                 })
-       /*         var dat = [data[bisector(data, date)]]
-                var datas = []
-                for(var i = 1; i < dat[0].length; i++) {
-                    datas[i-1] = {
-                        date: dat[0][0],
-                        value: dat[0][i]
-                    }
-                } */
 
                 // Do a data-join (enter, update, exit) to draw circles
                 var circles = g.selectAll(".hoverCircle").data(dat)
@@ -179,7 +170,8 @@ var LineChart = function() {
                         .attr("class", "hoverText")
                         .attr("x", function(d){return xScale(xValue(d)) + 10})
                         .attr("y", function(d){return yScale(yValue(d)) -5}) // Swap out with textFunction, change example.js
-                        .text(function(d){return textFunction(d)})
+                        .text(function(d){
+                            return textFunction(d)})
             
                 text.attr("x", function(d){return xScale(xValue(d)) + 10})
                         .attr("y", function(d){return yScale(yValue(d)) -5})
@@ -317,6 +309,7 @@ var LineChart = function() {
         yValue = value;
         line.y(function(d) {return yScale(yValue(d))});
         yAxis.scale(yScale);
+        textFunction = function(d){return yValue(d)}
         return myChart;
     };
 
