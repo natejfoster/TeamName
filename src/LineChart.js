@@ -1,6 +1,7 @@
 "use strict"
-// TODO: write out which word is which line, multiple colors for different lines, transitions
+// TODO: multiple colors for different lines, transitions
 // GET RID OF ALL INSTANCES OF HARD CODING 
+// Get rid of js files: cdn should be good enough
 var LineChart = function() {
     // Set default values
     var margin = {
@@ -32,6 +33,7 @@ var LineChart = function() {
     var words = [] // Words to include within chart, put in as an array
     var textFunction = function(d){return yValue(d)}
     var timeRange = [new Date("0000-01-01T08:00:00.000Z"), new Date("9999-01-01T08:00:00.000Z")]
+    var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
     function myChart(selection) {
         selection.each(function (data) {
@@ -39,7 +41,7 @@ var LineChart = function() {
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
             var data = data.filter(function(d) {
                 for(var i = 0 ; i < words.length; i++) { // Hard coding here
-                    if(words[i] == d.word && xValue(d) > timeRange[0] && xValue(d) < timeRange[1]) {
+                    if(words[i] == d.word && xValue(d) >= timeRange[0] && xValue(d) <= timeRange[1]) {
                         return true;
                     }
                 }
@@ -218,7 +220,7 @@ var LineChart = function() {
 
     // Getter/Setters
     myChart.margin = function (value) { // Ensure to set margins for top, left, right, and bottom, or graph will look messed up
-        if (!arguments.length) {
+        if(!arguments.length) {
             return margin;
         }
         margin = value; // Whenever margins, width, or height are updated, drawWidth and drawHeight must also be updated
@@ -228,7 +230,7 @@ var LineChart = function() {
     }
 
     myChart.width = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return width;
         }
         width = value + 300;
@@ -237,7 +239,7 @@ var LineChart = function() {
     };
 
     myChart.height = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return height;
         }
         height = value;
@@ -247,7 +249,7 @@ var LineChart = function() {
     };
 
     myChart.color = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return color;
         }
         color = value;
@@ -255,7 +257,7 @@ var LineChart = function() {
     }
 
     myChart.focusColor = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return focusColor;
         }
         focusColor = value;
@@ -263,7 +265,7 @@ var LineChart = function() {
     }
 
     myChart.lineWidth = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return lineWidth;
         }
         lineWidth = value;
@@ -271,7 +273,7 @@ var LineChart = function() {
     }
 
     myChart.title = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return title;
         }
         title = value;
@@ -279,7 +281,7 @@ var LineChart = function() {
     }
 
     myChart.xAxisTitle = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return xAxisTitle;
         }
         xAxisTitle = value;
@@ -287,7 +289,7 @@ var LineChart = function() {
     }
 
     myChart.yAxisTitle = function (value) {
-        if (!arguments.length) {
+        if(!arguments.length) {
             return yAxisTitle;
         }
         yAxisTitle = value;
@@ -296,7 +298,7 @@ var LineChart = function() {
 
     // Specifies the xValue and yValue respectively to set to
     myChart.xValue = function (value) {
-        if (!arguments.length) return xValue;
+        if(!arguments.length) return xValue;
         xValue = value;
         
         line.x(function(d) {return xScale(xValue(d))});
@@ -305,7 +307,7 @@ var LineChart = function() {
     };
 
     myChart.yValue = function (value) {
-        if (!arguments.length) return yValue;
+        if(!arguments.length) return yValue;
         yValue = value;
         line.y(function(d) {return yScale(yValue(d))});
         yAxis.scale(yScale);
@@ -314,20 +316,26 @@ var LineChart = function() {
     };
 
     myChart.words = function(value) { // Must be an array of words that you want to see in chart, else fails
-        if (!arguments.length) return words; 
+        if(!arguments.length) return words; 
         words = value;
         return myChart;
     }
 
     myChart.textFunction = function(value) {
-        if (!arguments.length) return textFunction; 
+        if(!arguments.length) return textFunction; 
         textFunction = value;
         return myChart;
     }
 
     myChart.timeRange = function(value) { // Requires an array of two values, the first lower than the other, parsed as dates
-        if (!arguments.length) return timeRange; 
-        timeRange= value;
+        if(!arguments.length) return timeRange; 
+        timeRange = value;
+        return myChart;
+    }
+
+    myChart.colorScale = function(value) { // Give an array of colors to make this one work
+        if(!arguments.length) return colorScale;
+        colrScale = d3.scaleOrdinal(value);
         return myChart;
     }
 
