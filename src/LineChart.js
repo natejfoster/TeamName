@@ -17,7 +17,7 @@ var LineChart = function() {
     var yScale = d3.scaleLinear().range([height, 0]);
     var xAxis = d3.axisBottom(xScale)
     var yAxis = d3.axisLeft(yScale);
-    var wordValue = function(d) {return d[0]} // Where to find the "word" you're tracking: categories. Ex: countries, words
+    var categories = function(d) {return d[0]} // Where to find the "word" you're tracking: categories. Ex: countries, words
     var xValue = function(d) {return d[1]} // Values by default are set to first values in array
     var yValue = function(d) {return d[2]}
     var line = d3.line() 
@@ -40,8 +40,8 @@ var LineChart = function() {
             // Filter out data using words
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
             var data = data.filter(function(d) {
-                for(var i = 0 ; i < words.length; i++) { // Hard coding here
-                    if(words[i] == d.word && xValue(d) >= timeRange[0] && xValue(d) <= timeRange[1]) {
+                for(var i = 0 ; i < words.length; i++) {
+                    if(words[i] == categories(d) && xValue(d) >= timeRange[0] && xValue(d) <= timeRange[1]) {
                         return true;
                     }
                 }
@@ -53,7 +53,7 @@ var LineChart = function() {
             for(var i = 0; i < words.length; i++) {
                 var wordArray = []
                 for(var j = 0; j < data.length; j++) {
-                    if(words[i] == data[j].word) { // Hard coding here
+                    if(words[i] == categories(data[j])) {
                         wordArray.push(data[j])
                     }
                 }
@@ -290,9 +290,9 @@ var LineChart = function() {
         return myChart;
     }
 
-    myChart.wordValue = function (value) {
-        if(!arguments.length) return wordValue;
-        wordValue = value;   
+    myChart.categories = function (value) {
+        if(!arguments.length) return categories;
+        categories = value;   
         return myChart;
     };
 

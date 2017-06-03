@@ -4,9 +4,8 @@ $(function() {
     d3.tsv("data/words.tsv", function(error, data) {
         var formatDate = d3.timeParse("%Y");
         var myChart = LineChart()
-            .xValue(function(d) {
-                return formatDate(+d.year)
-            })
+            .categories(function(d) {return d.word})
+            .xValue(function(d) { return formatDate(+d.year)})
             .yValue(function(d) { return +d.occurences})
             .focusColor("steelblue")
             .height(500)
