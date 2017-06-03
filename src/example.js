@@ -17,6 +17,7 @@ $(function() {
             .title("Language in Motion")
             .words(["Biodiversity", "Bangladesh"])
             .textFunction(function(d) {return d.value})
+            .timeRange([formatDate(1950), formatDate(2000)])
 
         var chartWrapper = d3.select("#vis")
                         .datum(data)

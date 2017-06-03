@@ -1,6 +1,7 @@
 "use strict"
 // TODO: Get multiple lines working (mark code that will 100% have to change to make it work), write out which word is which line, multiple colors for different lines, transitions
-// GET RID OF ALL INSTANCES OF HARD CODING
+// GET RID OF ALL INSTANCES OF HARD CODING 
+//FILTERING BY DATE
 var LineChart = function() {
     // Set default values
     var margin = {
@@ -31,14 +32,15 @@ var LineChart = function() {
     var drawHeight = height - margin.top - margin.bottom;
     var words = [] // Words to include within chart, put in as an array
     var textFunction = function(d) {return yValue}
+    var timeRange = [new Date("0000-01-01T08:00:00.000Z"), new Date("9999-01-01T08:00:00.000Z")]
 
     function myChart(selection) {
         selection.each(function (data) {
             // Filter out data using words
             // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
             var data = data.filter(function(d) {
-                for(var i = 0 ; i < words.length; i++) {
-                    if(words[i] == d.word) {
+                for(var i = 0 ; i < words.length; i++) { // Hard coding here
+                    if(words[i] == d.word && xValue(d) > timeRange[0] && xValue(d) < timeRange[1]) {
                         return true;
                     }
                 }
@@ -50,7 +52,7 @@ var LineChart = function() {
             for(var i = 0; i < words.length; i++) {
                 var wordArray = []
                 for(var j = 0; j < data.length; j++) {
-                    if(words[i] == data[j].word) {
+                    if(words[i] == data[j].word) { // Hard coding here
                         wordArray.push(data[j])
                     }
                 }
@@ -134,8 +136,6 @@ var LineChart = function() {
             function drawHovers(date) {
                 // Get hover data by using the bisector function to find the y values
                 var bisector = d3.bisector(function(d, x) {
-                    console.log(xValue(d))
-                    console.log(xValue(d) - x)
                     return xValue(d) - x
                 }).left
                 var dat = []
@@ -329,6 +329,12 @@ var LineChart = function() {
     myChart.textFunction = function(value) {
         if (!arguments.length) return textFunction; 
         textFunction = value;
+        return myChart;
+    }
+
+    myChart.timeRange = function(value) { // Requires an array of two values, the first lower than the other, parsed as dates
+        if (!arguments.length) return timeRange; 
+        timeRange= value;
         return myChart;
     }
 
