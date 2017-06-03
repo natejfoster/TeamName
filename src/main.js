@@ -47,7 +47,6 @@ $.fn.showTitle = function() {
 
 $(function() {
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -70,52 +69,42 @@ $(function() {
         var update = function(index) {
             switch (index) {
                 case 0:
-                    console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
                     var colorScale = ["Green", "Red"];
                     break;
                 case 1:
-                    console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
                     var colorScale = ["Green", "Red"];
                     break;
                 case 2:
-                    console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
                     var colorScale = ["Green", "Red"];
                     break;
                 case 3:
-                    console.log("HIHIHIHIHIH")
                     var words = ["War", "Peace"];
                     var colorScale = ["Green", "Red"];
                     break;
                 case 4:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
                 case 5:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
                 case 6:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
                 case 7:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
                 case 8:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
                 case 9:
-                    console.log("HIHIHIHIHIH")
                     var colorScale = ["Green", "Red"];
                     var words = ["War", "Peace"];
                     break;
@@ -147,7 +136,6 @@ $(function() {
             chart.words(words);
             chart.colorScale(colorScale);
             // chartWrapper.datum(data).call(chart);
-            console.log("HI");
             chart.colorScale(["Blue", "Blue"]);
             // chartWrapper.datum(data).call(chart);
         };
@@ -162,11 +150,9 @@ $(function() {
         scroll.on('active', function(index) {
             update(index);
         })
-        // console.log(data);
     })
     
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -190,7 +176,6 @@ $(function() {
 
         
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -214,7 +199,6 @@ $(function() {
 
              
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -237,7 +221,6 @@ $(function() {
      });
 
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -262,7 +245,6 @@ $(function() {
    
 
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -284,7 +266,6 @@ $(function() {
                         .call(chart);
      });
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -307,7 +288,6 @@ $(function() {
      });
     
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -330,7 +310,6 @@ $(function() {
      });
 
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -353,7 +332,6 @@ $(function() {
      });
 
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -377,7 +355,6 @@ $(function() {
 
 
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -400,7 +377,6 @@ $(function() {
      });
 
     d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -423,7 +399,6 @@ $(function() {
      });
 
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -446,7 +421,6 @@ $(function() {
      });
 
      d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -460,7 +434,7 @@ $(function() {
             .title("Language in Motion")
             .words(["Microsoft", "Robotics"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1961), formatDate(2000)])
+            .timeRange([formatDate(1980), formatDate(2000)])
             .colorScale(["Blue", "Green", "Orange"])
 
         var chartWrapper = d3.select("#vis13")
@@ -468,7 +442,6 @@ $(function() {
                         .call(chart);
      });
         d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -482,7 +455,7 @@ $(function() {
             .title("Language in Motion")
             .words(["Netscape", "Cyberspace", "HTML", "URL", "HTTP"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1961), formatDate(2000)])
+            .timeRange([formatDate(1990), formatDate(2000)])
             .colorScale(["Blue", "Green", "Orange", "Purple", "Red", "Brown"])
 
         var chartWrapper = d3.select("#vis14")
@@ -490,7 +463,6 @@ $(function() {
                         .call(chart);
      });
         d3.tsv("data/words.tsv", function(error, data) {
-         console.log(data);
         var formatDate = d3.timeParse("%Y");
         var chart = LineChart()
             .categories(function(d) {return d.word})
@@ -504,7 +476,7 @@ $(function() {
             .title("Language in Motion")
             .words(["ITunes", "Google", "Microarrays", "DVDS", "Blogs"])
             .textFunction(function(d) {return d.word + " occurences in " + d.year + ": " + d.occurences})
-            .timeRange([formatDate(1961), formatDate(2000)])
+            .timeRange([formatDate(2000), formatDate(2008)])
             .colorScale(["Blue", "Green", "Orange", "Purple", "Red"])
 
         var chartWrapper = d3.select("#vis15")
