@@ -66,7 +66,7 @@ $(function() {
         var chartWrapper = d3.select("#vis")
                         .datum(data)
                         .call(chart);
-                           var update = function(index) {
+        var update = function(index) {
             switch (index) {
                 case 0:
                     console.log("HIHIHIHIHIH")
@@ -142,7 +142,7 @@ $(function() {
             chart.words(words);
             // chart.fillColor(fillColor);
             chartWrapper.datum(data).call(chart);
-            
+
         };
         // Create scroller
         var scroll = scroller()
@@ -156,7 +156,7 @@ $(function() {
             update(index);
         })
     })
-    
+
     // $('#TechnologyButton').click(changeChartFilter);
 
     // function changeChartFilter(event, element){
@@ -268,7 +268,7 @@ $(function() {
         //     }
         //     myChart.fillColor(fillColor);
         //     chart.datum(data).call(myChart);
-            
+
         // };
         // // Create scroller
         // var scroll = scroller()
